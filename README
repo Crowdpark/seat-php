@@ -1,0 +1,206 @@
+// INSTANTIATE CLASS
+
+// Without username/password
+$db = new Seat('http://localhost:5984/example-db');
+$db = new Seat('example-db');
+
+// With username/password
+$db = new Seat('http://username:password@localhost:5984/example-db');
+$db = new Seat('example-db', 'username', 'password');
+
+// By default Seat with use port 5984 and localhost
+// Seat does not check for the existence of the database you specify
+
+// Check to see if database exists...
+$db->get();
+
+// if database does not exist this will return..
+stdClass Object
+(
+    [error] => not_found
+    [reason] => no_db_file
+)
+
+// Create non-existent db
+$db->put();
+
+// will return
+stdClass Object
+(
+    [ok] => 1
+)
+
+// now that our database exists, $db->get(); should return something like..
+
+stdClass Object
+(
+    [db_name] => example-db
+    [doc_count] => 0
+    [doc_del_count] => 0
+    [update_seq] => 0
+    [purge_seq] => 0
+    [compact_running] => 
+    [disk_size] => 79
+    [instance_start_time] => 1286489228968637
+    [disk_format_version] => 5
+    [committed_update_seq] => 0
+)
+
+// now that that's settled, let's put our first document in the database
+
+$doc = array(
+		'_id'=>'users.kennypowers',
+		'type'=>'user',
+		'username'=>'kennypowers'
+	);
+$db->put($doc);
+
+// $db->put($doc) should return something like..
+
+stdClass Object
+(
+    [ok] => 1
+    [id] => users.kennypowers
+    [rev] => 1-67804b626c2fecc05930163787bd691a
+)
+
+// now let's get this document, make a change, and save it back to the database..
+
+$doc = $db->get('users.kennypowers');
+$doc->number = 55;
+$db->put($doc);
+
+// this should return something like..
+
+stdClass Object
+(
+    [ok] => 1
+    [id] => users.kennypowers
+    [rev] => 2-43b83da320e429919c9b9519bd1f1694
+)
+
+// Now let's add another user..
+
+$doc = array(
+		'_id'=>'users.steviejanowski',
+		'type'=>'user',
+		'username'=>'steviejanowski'
+	);
+$db->put($doc);
+
+// In the same directory as seat.php there there is a "/views" folder
+// these views can be pushed to the database
+// (at this point there is no function to pull views from the database but one
+// should be available in the future)
+// Views can be created simply by adding map.js and an optional reduce.js
+// file within the given directory structure...
+
+./views/[database-name]/[design-document]/[view]/map|reduce.js
+
+// Let's create a view in order to retreive users by their username
+
+in ./views/example-db/users/by_username/map.js
+
+### map.js
+function (doc) {
+	if (doc.type=='user') {
+		emit(doc.username, doc);
+	}
+}
+###
+
+// Now we need to push this view to the database..
+
+$db->pushViews();
+
+// this should return an array of any views that were updated...
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [_id] => _design/users
+            [_rev] => 1-4324321b4ddc8a13e9086b0391f4d224
+            [language] => javascript
+            [views] => stdClass Object
+                (
+                    [by_username] => stdClass Object
+                        (
+                            [map] => function (doc) {
+								if (doc.type=='user') {
+									emit(doc.username, doc);
+								}
+							}
+                        )
+                )
+        )
+)
+
+// Now we can use this view to retreive users by username...
+// (Seat uses a little php magic to do this)
+
+$db->users->by_username('key="kennypowers"');
+OR
+$db->users->by_username(array(
+		'key'=>'"kennypowers"'
+	));
+
+// Each of these should return something like...
+
+stdClass Object
+(
+    [total_rows] => 2
+    [offset] => 1
+    [rows] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [id] => users.kennypowers
+                    [key] => kennypowers
+                    [value] => stdClass Object
+                        (
+                            [_id] => users.kennypowers
+                            [_rev] => 2-43b83da320e429919c9b9519bd1f1694
+                            [type] => user
+                            [username] => kennypowers
+                            [number] => 55
+                        )
+                )
+        )
+)
+
+// Now let's delete a user from the database
+
+$user = $db->get('users.kennypowers');
+$db->delete($user);
+
+// $db->delete($user); should return something like..
+
+stdClass Object
+(
+    [ok] => 1
+    [id] => users.kennypowers
+    [rev] => 3-b413192ae1ea1b52063fd9f72cf25ab9
+)
+
+// You can also user the $db->post() function to send post requests
+// to a path relative to the database
+
+// For example, if we were to want to compact the database..
+
+$db->post('_compact');
+
+// This should return something like..
+
+stdClass Object
+(
+    [ok] => 1
+)
+
+// At this point all requests are relative to the database defined
+// when you construct the class.  In the future we're hoping to add
+// support for non database specific requests
+
+// For example:
+
+Seat::get('_all_dbs');
