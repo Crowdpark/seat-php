@@ -198,7 +198,7 @@ stdClass Object
 )
 
 // At this point all requests are relative to the database defined
-// when you construct the class.  In the future we're hoping to add
+// when you instantiate the class.  In the future we're hoping to add
 // support for non database specific requests
 
 // For example:
