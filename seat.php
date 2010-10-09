@@ -7,11 +7,11 @@
 	 *
 	 *	DOCUMENTATION
 	 *	----------------------------------------
-	 *	see README.txt
+	 *	see README.md
 	 *	
 	 *	LICENSE
 	 *	----------------------------------------
-	 *	GPL/MIT
+	 *	MIT, see LICENSE
 	 *
 	 *	DEPENDENCIES
 	 *	----------------------------------------
