@@ -32,7 +32,7 @@ MIT - See [LICENSE][2]
 
 
 ##Usage Basics
-###Check existence of database
+###Check existence of a database
 
 	$db->get();
 
