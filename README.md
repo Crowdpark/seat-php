@@ -5,7 +5,7 @@ PHP [CouchDB][1] wrapper: elegant and lightweight REST interface to CouchDB data
 ##License
 MIT - See [LICENSE][2]
 
-----------
+
 ##Getting Started
 1. **Install dependencies**
 
@@ -31,9 +31,9 @@ MIT - See [LICENSE][2]
 		
 *Note: By default, Seat will use host localhost, port 5984, and does not check for the existence of the database you specify.*
 
-----------
+
 ##Usage Basics
-###Check to see if database exists
+###Check existence of database
 
 	$db->get();
 
@@ -138,7 +138,7 @@ Return result:
 	    [rev] => 3-b413192ae1ea1b52063fd9f72cf25ab9
 	)
 	
-----------
+
 ##Working With Views
 
 **Introduction**
@@ -227,7 +227,7 @@ Return result:
 	        )
 	)
 
-----------
+
 ##Extended Functionality
 
 Since Seat makes use of REST, it's possible to send POST requests to a path relative to the database.
