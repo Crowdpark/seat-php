@@ -1,7 +1,6 @@
 #Seat-PHP (0.1)
 PHP [CouchDB][1] wrapper: elegant and lightweight REST interface to CouchDB datastore.
 
-----------
 ##License
 MIT - See [LICENSE][2]
 
