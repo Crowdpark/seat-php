@@ -18,7 +18,8 @@
 	 *	$ sudo pear install Net_URL2-0.3.1
 	 *	$ sudo pear install HTTP_Request2-0.5.2
 	 */
-
+	
+	set_include_path(get_include_path() . PATH_SEPARATOR . '.:/usr/lib/php');
 	require_once 'HTTP/Request2.php';
 	
 	class Seat {
