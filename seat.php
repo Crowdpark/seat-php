@@ -158,17 +158,17 @@
 		
 		function __construct ($url=null, $user=null, $pass=null) {
 			$url = parse_url($url);
-			if (strlen($url['host']) > 0) {
+			if (isset($url['host']) && strlen($url['host']) > 0) {
 				$this->host = $url['host'];
 			} else {
 				$this->host = self::DEFAULT_HOST;
 			}
-			if (strlen($url['port']) > 0) {
+			if (isset($url['port']) && strlen($url['port']) > 0) {
 				$this->port = $url['port'];
 			} else {
 				$this->port = self::DEFAULT_PORT;
 			}
-			if (strlen($url['path']) > 1) {
+			if (isset($url['path']) && strlen($url['path']) > 1) {
 				$path = explode('/', $url['path']);
 				foreach ($path as $p) {
 					if (strlen($p)>0) {
