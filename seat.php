@@ -113,7 +113,7 @@
 		}
 		
 		public function pushViews () {
-			$dirs = glob('./views/*/*/*');
+			$dirs = glob('./views/'.$this->db.'/*/*');
 			$updated_views = array();
 			foreach ($dirs as $dir) {
 				$split = explode('/', $dir);
