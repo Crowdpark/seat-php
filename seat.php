@@ -19,7 +19,7 @@
 	 *	$ sudo pear install HTTP_Request2-0.5.2
 	 */
 	
-	set_include_path(get_include_path() . PATH_SEPARATOR . '.:/usr/lib/php');
+	set_include_path(get_include_path() . PATH_SEPARATOR . '.:/usr/lib/php' . PATH_SEPARATOR . '.:/usr/local/lib/php');
 	require_once 'HTTP/Request2.php';
 	
 	class Seat {
